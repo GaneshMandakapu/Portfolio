@@ -7,21 +7,24 @@ const Hero = () => {
 
   const handleDownloadResume = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/resume');  // Already using port 5001
-      if (!response.ok) throw new Error('Failed to download resume');
+      const response = await fetch('https://portfolio-jgzl.onrender.com/api/resume');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to download resume');
+      }
       
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'Ganesh_Balaraju_Resume.pdf';
+      link.download = 'Ganesh_Balaraju_CV.pdf';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading resume:', error);
-      alert('Failed to download resume. Please try again later.');
+      alert(error.message || 'Failed to download resume. Please try again later.');
     }
   };
 

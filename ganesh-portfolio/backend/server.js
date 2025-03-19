@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
@@ -51,8 +52,15 @@ app.post('/api/contact', async (req, res) => {
 
 // Resume download route
 app.get('/api/resume', (req, res) => {
-  const filePath = path.join(__dirname, 'public', 'Ganesh_Balaraju_Resume.pdf');
-  res.download(filePath, 'Ganesh_Balaraju_Resume.pdf', (err) => {
+  const filePath = path.join(__dirname, 'public', 'Ganesh_Balaraju_CV.pdf');
+  
+  // Check if file exists before attempting download
+  if (!fs.existsSync(filePath)) {
+    console.error('Resume file not found at:', filePath);
+    return res.status(404).json({ message: 'Resume file not found' });
+  }
+  
+  res.download(filePath, 'Ganesh_Balaraju_CV.pdf', (err) => {
     if (err) {
       console.error('Error downloading resume:', err);
       res.status(500).json({ message: 'Failed to download resume.' });
