@@ -5,6 +5,26 @@ import * as THREE from 'three';
 const Hero = () => {
   const containerRef = useRef(null);
 
+  const handleDownloadResume = async () => {
+    try {
+      const response = await fetch('http://localhost:5001/api/resume');  // Already using port 5001
+      if (!response.ok) throw new Error('Failed to download resume');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'Ganesh_Balaraju_Resume.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading resume:', error);
+      alert('Failed to download resume. Please try again later.');
+    }
+  };
+
   useEffect(() => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -109,10 +129,10 @@ const Hero = () => {
       {/* Sphere Labels */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="relative w-full h-full flex items-center justify-center">
-          <div className="absolute top-1/4 left-1/4 text-2xl font-bold"></div>
-          <div className="absolute top-1/4 right-1/4 text-2xl font-bold"></div>
-          <div className="absolute bottom-1/4 left-1/4 text-2xl font-bold"></div>
-          <div className="absolute bottom-1/4 right-1/4 text-2xl font-bold"></div>
+          <div className="absolute top-1/4 left-1/4 text-2xl font-bold">About</div>
+          <div className="absolute top-1/4 right-1/4 text-2xl font-bold">Services</div>
+          <div className="absolute bottom-1/4 left-1/4 text-2xl font-bold">Portfolio</div>
+          <div className="absolute bottom-1/4 right-1/4 text-2xl font-bold">Contact</div>
         </div>
       </div>
 
@@ -143,6 +163,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
+            className="space-x-4"
           >
             <button 
               onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
@@ -150,6 +171,13 @@ const Hero = () => {
             >
               Get in Touch
             </button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              onClick={handleDownloadResume}
+              className="border border-black px-8 py-3 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              Download Resume
+            </motion.button>
           </motion.div>
         </motion.div>
       </div>
