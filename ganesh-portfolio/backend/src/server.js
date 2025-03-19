@@ -15,7 +15,7 @@ app.listen(PORT, () => {
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); // Serve static files (like the resume PDF)
+app.use(express.static(path.join(__dirname, '..', 'public'))); // Serve static files (like the resume PDF)
 
 // Email transporter setup using Nodemailer
 const transporter = nodemailer.createTransport({
@@ -52,7 +52,7 @@ app.post('/api/contact', async (req, res) => {
 
 // Resume download route
 app.get('/api/resume', (req, res) => {
-  const filePath = path.join(__dirname, 'public', 'Ganesh_Balaraju_CV.pdf');
+  const filePath = path.join(__dirname, '..', 'public', 'Ganesh_Balaraju_Resume.pdf');
   
   // Check if file exists before attempting download
   if (!fs.existsSync(filePath)) {
